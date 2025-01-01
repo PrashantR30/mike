@@ -86,6 +86,8 @@ jobs:
         run: |
           # Retrieve the comma-separated list of tags
           IFS=',' read -ra two_tags <<< "${{ steps.get_tags.outputs.tags }}"
+
+          latest="${two_tags[0]}"
           
           # Deploy each tag with mike
           for tag in "${two_tags[@]}"; do
@@ -93,10 +95,10 @@ jobs:
             mike deploy "$tag" --push
           done
 
+          echo "Setting default docs version to '${latest}'"
+          mike set-default "$latest" --push
+
       # - name: Deploy docs for selected version
       #   run: |
       #     echo "User selected version: ${{ github.event.inputs.selected_version }}"
       #     mike deploy "${{ github.event.inputs.selected_version }}" --push
-
-      #     # Optionally set the user-selected version as the default "latest"
-      #     mike set-default latest --push
