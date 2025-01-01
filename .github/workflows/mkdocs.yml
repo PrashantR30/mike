@@ -93,10 +93,10 @@ jobs:
             mike deploy "$tag" --push
           done
 
-      - name: Deploy docs for selected version
-        run: |
-          echo "User selected version: ${{ github.event.inputs.selected_version }}"
-          mike deploy "${{ github.event.inputs.selected_version }}" --push
+      # - name: Deploy docs for selected version
+      #   run: |
+      #     echo "User selected version: ${{ github.event.inputs.selected_version }}"
+      #     mike deploy "${{ github.event.inputs.selected_version }}" --push
 
-          # # Optionally set the user-selected version as the default "latest"
-          # mike set-default latest --push
+      #     # Optionally set the user-selected version as the default "latest"
+      #     mike set-default latest --push
