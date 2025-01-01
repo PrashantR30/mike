@@ -24,19 +24,19 @@ jobs:
           # Ensure tags are up-to-date (especially if using shallow clones or older commits)
           git fetch --tags
 
-          # List only tags that match 'v*', sort by version descending, take the top 2
+          # Get last two tags matching 'v*'
           last_two_tags=$(git tag --list "v*" --sort=-version:refname | head -n 2)
 
-          echo "Last two tags in descending order:"
-          echo "$last_two_tags"
+          # Print them as a single string
+          echo "Found tags: $last_two_tags"
 
-          # Expose them as an output variable to use in subsequent steps
-          echo "tags=$last_two_tags" >> $GITHUB_OUTPUT
+          # Convert string to an array by splitting on newlines
+          IFS=$'\n' read -r -d '' -a tags_array <<< "$last_two_tags"
 
-      - name: Do something with these tags
-        run: |
-          echo "Here are the tags we can work with:"
-          echo "${{ steps.get_tags.outputs.tags }}"
+          # Loop over the array
+          for tag in "${tags_array[@]}"; do
+            echo "Processing tag: $tag"
+          done
 
       - name: Configure Git Credentials
         run: |
