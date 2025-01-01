@@ -1,4 +1,17 @@
 site_name: "My Docs"
+site_name: Documentation
+site_description: Sample Docs
+site_author: Mirantis, Inc.
+site_url: "aa"
+docs_dir: docs/
+repo_name: GitHub
+repo_url: 
+copyright:
+  Copyright &copy; BUILD_YEAR <a href="https://mirantis.com/">Mirantis Inc.</a>
+  - All rights reserved.
+edit_uri: ""
+
+
 theme:
   name: material
   version:
