@@ -1,32 +1,70 @@
-name: docs 
+name: docs
+
 on:
   push:
     branches:
       - main
       - dev
+
 permissions:
   contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Important: ensures tags are fetched
+
+      - name: Get last 2 tags in descending order
+        id: get_tags
+        run: |
+          # Ensure tags are up-to-date (especially if using shallow clones or older commits)
+          git fetch --tags
+
+          # List only tags that match 'v*', sort by version descending, take the top 2
+          last_two_tags=$(git tag --list "v*" --sort=-version:refname | head -n 2)
+
+          echo "Last two tags in descending order:"
+          echo "$last_two_tags"
+
+          # Expose them as an output variable to use in subsequent steps
+          echo "tags=$last_two_tags" >> $GITHUB_OUTPUT
+
+      - name: Do something with these tags
+        run: |
+          echo "Here are the tags we can work with:"
+          echo "${{ steps.get_tags.outputs.tags }}"
+
       - name: Configure Git Credentials
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
-      - run: pip install \
-              mkdocs-material \
-              mkdocs-mermaid2-plugin \
-              mike 
-      - run: mkdocs gh-deploy --force
+
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: 3.x
+
+      # - name: Generate Cache ID
+      #   run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+
+      # - name: Restore Cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     key: mkdocs-material-${{ env.cache_id }}
+      #     path: .cache
+      #     restore-keys: |
+      #       mkdocs-material-
+
+      # - name: Install Dependencies
+      #   run: |
+      #     pip install \
+      #       mkdocs-material \
+      #       mkdocs-mermaid2-plugin \
+      #       mike
+
+      # - name: Deploy Docs
+      #   run: mkdocs gh-deploy --force
