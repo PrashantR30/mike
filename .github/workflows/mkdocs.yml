@@ -60,6 +60,7 @@ jobs:
       - name: Deploy docs for the last 2 tags
         run: |
           IFS=',' read -ra two_tags <<< "${{ steps.get_tags.outputs.tags }}"
+          latest="${two_tags[0]}"
 
           for tag in "${two_tags[@]}"; do
             echo "Deploying docs for $tag..."
@@ -72,4 +73,5 @@ jobs:
           done
 
           # Make the first tag to be "latest," do:
-          mike set-default "${two_tags[0]}" --push
+          mike set-default "$latest" --push
+          mike alias "$latest" latest --push
