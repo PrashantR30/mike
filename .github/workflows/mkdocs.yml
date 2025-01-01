@@ -67,7 +67,6 @@ jobs:
       #   run: |
       #     pip install \
       #       mkdocs-material \
-      #       mkdocs-mermaid2-plugin \
       #       mike
 
       # - name: Deploy Docs

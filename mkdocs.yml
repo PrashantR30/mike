@@ -12,5 +12,4 @@ extra:
 
 plugins:
   - search
-  - mermaid2
   - mike
