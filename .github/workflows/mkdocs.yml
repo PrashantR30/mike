@@ -47,31 +47,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: 3.x
-
-      # - name: Generate Cache ID
-      #   run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
-
-      # - name: Restore Cache
-      #   uses: actions/cache@v4
-      #   with:
-      #     key: mkdocs-material-${{ env.cache_id }}
-      #     path: .cache
-      #     restore-keys: |
-      #       mkdocs-material-
-
-      # - name: Install Dependencies
-      #   run: |
-      #     pip install \
-      #       mkdocs-material \
-      #       mike
-
-      # - name: Deploy Docs
-      #   run: mkdocs gh-deploy --force
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -84,21 +59,17 @@ jobs:
 
       - name: Deploy docs for the last 2 tags
         run: |
-          # Retrieve the comma-separated list of tags
           IFS=',' read -ra two_tags <<< "${{ steps.get_tags.outputs.tags }}"
 
-          latest="${two_tags[0]}"
-          
-          # Deploy each tag with mike
           for tag in "${two_tags[@]}"; do
             echo "Deploying docs for $tag..."
+
+            # 1) Checkout the commit at this tag so that you get the correct doc files
+            git checkout "$tag"
+
+            # 2) Deploy docs from this snapshot
             mike deploy "$tag" --push
           done
 
-          echo "Setting default docs version to '${latest}'"
-          mike set-default "$latest" --push
-
-      # - name: Deploy docs for selected version
-      #   run: |
-      #     echo "User selected version: ${{ github.event.inputs.selected_version }}"
-      #     mike deploy "${{ github.event.inputs.selected_version }}" --push
+          # Make the first tag to be "latest," do:
+          mike set-default "${two_tags[0]}" --push
