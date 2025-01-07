@@ -75,9 +75,5 @@ jobs:
           # Make the first tag to be "latest," do:
           mike set-default "$latest" --push
           mike alias "$latest" latest --push
-        
-      - name: Replace BUILD_YEAR in mkdocs.yml
-        run: |
-          CURRENT_YEAR="$(date +'%Y')"
-          echo "Replacing BUILD_YEAR with $CURRENT_YEAR in mkdocs.yml..."
-          sed -i "s/BUILD_YEAR/$CURRENT_YEAR/g" mkdocs.yml
+      
+
