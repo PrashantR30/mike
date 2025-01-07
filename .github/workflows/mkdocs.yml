@@ -75,5 +75,3 @@ jobs:
           # Make the first tag to be "latest," do:
           mike set-default "$latest" --push
           mike alias "$latest" latest --push
-      
-
