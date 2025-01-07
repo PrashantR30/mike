@@ -1,7 +1,7 @@
-# Page 5.0 - Document version 5.0
+# Page 6.0 - Document version 6.0
 
-5.0
+6.0
 
-5.0
+6.0
 
-5.0
+6.0
